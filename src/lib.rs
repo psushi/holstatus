@@ -26,12 +26,12 @@ where
     fn reply(
         &mut self,
         reply: Payload,
-        input: Message<Payload>,
+        input: &Message<Payload>,
         output: &mut StdoutLock,
     ) -> anyhow::Result<()> {
         let reply = Message {
-            src: input.dest,
-            dest: input.src,
+            src: input.dest.to_owned(),
+            dest: input.src.to_owned(),
             body: MessageBody {
                 msg_id: Some(self.update_msg_id()),
                 in_reply_to: input.body.msg_id,
@@ -76,7 +76,6 @@ where
     match init_msg.body.payload {
         InitPayload::Init { node_id, .. } => {
             state.set_node_id(node_id);
-
             let reply = Message {
                 src: init_msg.dest,
                 dest: init_msg.src,
@@ -86,7 +85,6 @@ where
                     payload: InitPayload::InitOk,
                 },
             };
-
             serde_json::to_writer(&mut stdout, &reply)
                 .context("serialize response failed")
                 .unwrap();

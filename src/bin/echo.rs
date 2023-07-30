@@ -23,7 +23,7 @@ impl Node<Payload> for EchoNode {
                 let payload = Payload::EchoOk {
                     echo: echo.to_owned(),
                 };
-                self.reply(payload, input, output)?
+                self.reply(payload, &input, output)?
             }
             Payload::EchoOk { .. } => {}
         }

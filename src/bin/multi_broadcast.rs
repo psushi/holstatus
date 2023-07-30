@@ -37,7 +37,13 @@ impl Node<Payload> for BroadcastNode {
     ) -> anyhow::Result<()> {
         match &input.body.payload {
             Payload::Broadcast { message } => {
+                // If we've already seen this message, don't broadcast it again.
+                if self.messages.contains(message) {
+                    self.reply(Payload::BroadcastOk, &input, output)?
+                }
+
                 self.messages.push(*message);
+
                 self.reply(Payload::BroadcastOk, &input, output)?
             }
             Payload::Topology { topology } => {

@@ -29,7 +29,7 @@ impl Node<Payload> for GenerateNode {
                 let payload = Payload::GenerateOk {
                     guid: format!("{}-{}", self.node_id, self.id),
                 };
-                self.reply(payload, input, output)?
+                self.reply(payload, &input, output)?
             }
             Payload::GenerateOk { .. } => {}
         }
